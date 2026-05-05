@@ -1,0 +1,112 @@
+# ===========================
+# COMPILAÇÃO / BUILD
+# ===========================
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# ===========================
+# MAVEN
+# ===========================
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+
+# ===========================
+# SPRING BOOT
+# ===========================
+application-local.yml
+application-local.properties
+application-prod.yml
+application-prod.properties
+
+# ===========================
+# VARIÁVEIS DE AMBIENTE / SEGREDOS
+# ===========================
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.jks
+
+# ===========================
+# IDEs
+# ===========================
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea/shelf/
+.idea/workspace.xml
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# NetBeans
+nbproject/
+nbbuild/
+nbdist/
+nb-configuration.xml
+
+# ===========================
+# SISTEMA OPERACIONAL
+# ===========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ===========================
+# LOGS
+# ===========================
+*.log
+logs/
+log/
+spring.log
+
+# ===========================
+# DOCKER
+# ===========================
+docker-compose.override.yml
+
+# ===========================
+# TESTES / COBERTURA
+# ===========================
+.jacoco/
+jacoco.exec
+coverage/
+
+# ===========================
+# MISC
+# ===========================
+*.swp
+*.swo
+*.tmp
+*.bak
+.cache/
