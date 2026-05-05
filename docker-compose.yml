@@ -1,0 +1,70 @@
+services:
+
+  # ================================
+  # BANCO DE DADOS - PostgreSQL
+  # ================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: nutricare-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nutricare-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # CACHE - Redis
+  # ================================
+  redis:
+    image: redis:7-alpine
+    container_name: nutricare-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - nutricare-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ================================
+  # INTERFACE VISUAL - PgAdmin
+  # ================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: nutricare-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nutricare-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  nutricare-network:
+    driver: bridge

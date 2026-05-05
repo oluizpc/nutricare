@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: nutricare
+
+  # ================================
+  # BANCO DE DADOS
+  # ================================
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:nutricare}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  # ================================
+  # JPA / HIBERNATE
+  # ================================
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Flyway cuida do schema, JPA só valida
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+
+  # ================================
+  # FLYWAY (migrations)
+  # ================================
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # ================================
+  # REDIS
+  # ================================
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      timeout: 2000ms
+
+  # ================================
+  # SERIALIZAÇÃO
+  # ================================
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+# ================================
+# SERVIDOR
+# ================================
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# ================================
+# ACTUATOR (health check)
+# ================================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# ================================
+# LOGS
+# ================================
+logging:
+  level:
+    root: INFO
+    com.nutri.nutricare: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+# ================================
+# PERFIL: LOCAL
+# ================================
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.nutri.nutricare: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+
+---
+# ================================
+# PERFIL: PROD
+# ================================
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    root: WARN
+    com.nutri.nutricare: INFO
