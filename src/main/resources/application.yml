@@ -2,6 +2,10 @@ spring:
   application:
     name: nutricare
 
+  docker:
+    compose:
+      enabled: false
+
   # ================================
   # BANCO DE DADOS
   # ================================
@@ -20,7 +24,7 @@ spring:
   # ================================
   jpa:
     hibernate:
-      ddl-auto: validate        # Flyway cuida do schema, JPA só valida
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
@@ -51,8 +55,6 @@ spring:
   # ================================
   jackson:
     default-property-inclusion: non_null
-    serialization:
-      write-dates-as-timestamps: false
     deserialization:
       fail-on-unknown-properties: false
 

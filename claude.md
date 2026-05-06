@@ -199,17 +199,41 @@ Dados de pacientes são sensíveis. Observar:
 
 ## Próximos passos (backlog técnico)
 
-- [ ] Configurar `application.yml` com perfis local e prod
-- [ ] Implementar exception handler global (`@RestControllerAdvice`)
-- [ ] Criar primeira migration Flyway (tabelas base)
+- [x] Configurar `application.yml` com perfis local e prod
+- [x] Implementar exception handler global (`@RestControllerAdvice`)
+- [x] Criar primeira migration Flyway (tabelas base)
 - [ ] Configurar Spring Security + JWT
-- [ ] Implementar CRUD de Paciente (primeiro domínio)
+- [x] Implementar CRUD de Paciente (primeiro domínio)
 - [ ] Implementar CRUD de Agendamento
 - [ ] Implementar Plano Alimentar
 - [ ] Implementar módulo Financeiro
 - [ ] Configurar AWS SES para notificações
 - [ ] Configurar CI/CD com GitHub Actions
 - [ ] Deploy no AWS ECS
+
+---
+
+## O que foi implementado
+
+### Domínio Paciente (completo)
+- `Paciente.java` — entidade JPA com auditoria automática (`@CreationTimestamp`, `@UpdateTimestamp`)
+- `PacienteRepository.java` — Spring Data JPA com `existsByCpf` e `existsByEmail`
+- `PacienteRequestDTO` / `PacienteResponseDTO` — records Java 21 com Bean Validation
+- `PacienteMapper.java` — MapStruct com `toEntity`, `toResponse` e `updateEntity`
+- `PacienteService.java` — CRUD completo com validação de duplicidade
+- `PacienteController.java` — endpoints REST: POST, GET, GET/{id}, PUT/{id}, PATCH/{id}/desativar
+- `V1__create_pacientes.sql` — migration Flyway
+
+### Infraestrutura
+- `SecurityConfig.java` — Spring Security stateless, CSRF desabilitado (JWT pendente)
+- `GlobalExceptionHandler.java` — trata `ResourceNotFoundException` (404), `BusinessException` (409), `MethodArgumentNotValidException` (400)
+- `ErrorResponse.java` — record padronizado para respostas de erro
+- `DotenvEnvironmentPostProcessor` — removido; `.env` carregado via `main()` com `dotenv-java`
+
+### Notas técnicas
+- Spring Boot 4 usa Jackson 3 (`tools.jackson`) — `write-dates-as-timestamps` removido do `application.yml`
+- `spring.docker.compose.enabled=false` — containers gerenciados manualmente via `docker compose up -d`
+- `.env` carregado como `System.setProperty` antes do Spring inicializar em `NutricareApplication.main()`
 
 ---
 
